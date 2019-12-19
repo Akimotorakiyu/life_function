@@ -64,7 +64,7 @@ export default Vue.extend({
     initCtx() {
       console.log(this.$refs.myCanvas);
       const canvas: HTMLCanvasElement = this.$refs.myCanvas as any;
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", { alpha: false });
       if (ctx) {
         this.ctx = ctx;
       }
