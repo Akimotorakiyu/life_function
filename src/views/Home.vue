@@ -16,6 +16,9 @@
         >不支持canvas</canvas
       >
     </div>
+    <div>
+      fps:{{ status.fps.value.toFixed(2) }} {{ status.fps.tag ? "❤️" : "🥰" }}
+    </div>
     <button @click="initSandBox">重置sandBox</button>
     <button @click="run">运行</button>
     <button @click="animate">动画</button>
@@ -40,7 +43,12 @@ export default Vue.extend({
         height: 60
       },
       status: {
-        animate: false
+        animate: false,
+        fps: {
+          update: 0,
+          value: 0,
+          tag: true
+        }
       }
     };
   },
@@ -98,13 +106,19 @@ export default Vue.extend({
     },
     animate() {
       this.status.animate = true;
-      this.animation();
+      this.animation(Date.now());
     },
-    animation() {
+    animation(starTime: number) {
       this.run();
       if (this.status.animate) {
-        requestAnimationFrame(() => {
-          this.animation();
+        requestAnimationFrame(nextTime => {
+          if (nextTime - this.status.fps.update > 100) {
+            this.status.fps.update = nextTime;
+            this.status.fps.tag = !this.status.fps.tag;
+            this.status.fps.value = 1000 / (nextTime - starTime);
+          }
+
+          this.animation(nextTime);
         });
       }
       // this.status.animate = false;
