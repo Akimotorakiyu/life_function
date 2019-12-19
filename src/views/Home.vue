@@ -50,10 +50,12 @@ export default Vue.extend({
       let ctx = this.ctx;
       console.log("draw call");
       if (ctx) {
-        ctx.fillStyle = "rgb(200,0,0)";
+        ctx.fillStyle = `rgb(${255 * Math.random()},${255 *
+          Math.random()},${255 * Math.random()})`;
         ctx.fillRect(10, 10, 55, 50);
 
-        ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+        ctx.fillStyle = `rgba(${255 * Math.random()}, ${255 *
+          Math.random()}, ${255 * Math.random()}, 0.5)`;
         ctx.fillRect(30, 30, 55, 50);
       } else {
         console.warn("no ctx to render");
