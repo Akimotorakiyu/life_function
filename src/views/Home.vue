@@ -10,7 +10,7 @@
       <canvas
         ref="myCanvas"
         id="canvas"
-        width="1000"
+        width="800"
         height="800"
         class="my-canvas"
         >不支持canvas</canvas
@@ -36,8 +36,8 @@ export default Vue.extend({
       sandBox: [] as any[][],
       ctx: (undefined as any) as CanvasRenderingContext2D,
       sandSize: {
-        width: 100,
-        height: 100
+        width: 60,
+        height: 60
       },
       status: {
         animate: false
@@ -54,15 +54,11 @@ export default Vue.extend({
   },
   methods: {
     run() {
-      // console.log("start");
       this.canvasData.forEach((elements, x) => {
         elements.forEach((element, y) => {
-          // console.log(x, y);
           const offset = [-1, 0, 1];
           let counterOutter = offset.reduce((counterOutter, offsetX) => {
-            // debugger;
             const counterInner = offset.reduce((counterInner, offsetY) => {
-              // debugger;
               if (offsetX === 0 && offsetY === 0) {
                 return counterInner;
               } else {
@@ -86,8 +82,6 @@ export default Vue.extend({
             }, 0);
             return counterOutter + counterInner;
           }, 0);
-          // console.log(counterOutter);
-          // this.sandBox[x][y] = this.canvasData[x][y] ? 0 : 1;
           if (counterOutter === 2) {
             this.sandBox[x][y] = this.canvasData[x][y];
           } else if (counterOutter === 3) {
@@ -101,7 +95,6 @@ export default Vue.extend({
       this.canvasData = this.sandBox.map(elements =>
         elements.map(element => element)
       );
-      // console.log("end");
     },
     animate() {
       this.status.animate = true;
@@ -134,16 +127,44 @@ export default Vue.extend({
       );
     },
     drawCall() {
-      let ctx = this.ctx;
       // console.log("draw call");
-      if (ctx) {
-        this.canvasData.forEach((elements, x) => {
-          elements.forEach((element, y) => {
-            ctx.fillStyle = `rgb(${element * 255},${element * 255},${element *
-              255})`;
-            ctx.fillRect(10 * x + 1, 10 * y + 1, 8, 8);
+      if (this.ctx) {
+        let ctx = this.ctx;
+        const offscreenCanvas = document.createElement("canvas");
+
+        offscreenCanvas.width = this.sandSize.width * 10;
+        offscreenCanvas.height = this.sandSize.height * 10;
+
+        const offCtx = offscreenCanvas.getContext("2d");
+
+        if (offCtx) {
+          const offScreenCanvans = this.canvasData.forEach((elements, x) => {
+            elements.forEach((element, y) => {
+              offCtx.fillStyle = `rgb(${element * 255},${element *
+                255},${element * 255})`;
+              offCtx.fillRect(10 * x + 1, 10 * y + 1, 8, 8);
+            });
+          });
+        }
+        const offset = [-1, 0, 1];
+
+        offset.forEach(offsetX => {
+          offset.forEach(offsetY => {
+            ctx.drawImage(
+              offscreenCanvas,
+              100 + offsetX * this.sandSize.width * 10,
+              100 + offsetY * this.sandSize.height * 10
+            );
           });
         });
+
+        ctx.strokeStyle = `rgb(0,255,0)`;
+        ctx.strokeRect(
+          100,
+          100,
+          this.sandSize.width * 10,
+          this.sandSize.height * 10
+        );
       } else {
         console.warn("no ctx to render");
       }
