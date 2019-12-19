@@ -17,6 +17,7 @@
       >
     </div>
     <button @click="drawCall">绘制</button>
+    <button @click="initSandBox">重置sandBox</button>
   </div>
 </template>
 
@@ -28,10 +29,14 @@ export default Vue.extend({
   data() {
     return {
       // canvas 绘制数据
-      canvasData: [],
+      canvasData: [] as any[][],
       // sandBox 沙河数据
-      sandBox: [],
-      ctx: (undefined as any) as CanvasRenderingContext2D
+      sandBox: [] as any[],
+      ctx: (undefined as any) as CanvasRenderingContext2D,
+      sandSize: {
+        width: 100,
+        height: 100
+      }
     };
   },
   watch: {
@@ -46,17 +51,24 @@ export default Vue.extend({
     run() {},
     pause() {},
     stop() {},
+    initSandBox() {
+      this.sandBox = Array.from(new Array(this.sandSize.width)).map(() =>
+        Array.from(new Array(this.sandSize.height)).map(
+          () => 255 * Math.random()
+        )
+      );
+      this.canvasData = this.sandBox;
+    },
     drawCall() {
       let ctx = this.ctx;
       console.log("draw call");
       if (ctx) {
-        ctx.fillStyle = `rgb(${255 * Math.random()},${255 *
-          Math.random()},${255 * Math.random()})`;
-        ctx.fillRect(10, 10, 55, 50);
-
-        ctx.fillStyle = `rgba(${255 * Math.random()}, ${255 *
-          Math.random()}, ${255 * Math.random()}, 0.5)`;
-        ctx.fillRect(30, 30, 55, 50);
+        this.canvasData.forEach((elements, x) => {
+          elements.forEach((element, y) => {
+            ctx.fillStyle = `rgb(${element},${element},${element})`;
+            ctx.fillRect(10 * x + 1, 10 * y + 1, 8, 8);
+          });
+        });
       } else {
         console.warn("no ctx to render");
       }
