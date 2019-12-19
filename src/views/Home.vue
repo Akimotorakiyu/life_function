@@ -17,7 +17,8 @@
       >
     </div>
     <div>
-      fps:{{ status.fps.value.toFixed(2) }} {{ status.fps.tag ? "❤️" : "🥰" }}
+      代数{{ status.generation }} fps:{{ status.fps.value.toFixed(2) }}
+      {{ status.fps.tag ? "❤️" : "🥰" }}
     </div>
     <button @click="initSandBox">重置sandBox</button>
     <button @click="run">运行</button>
@@ -43,6 +44,7 @@ export default Vue.extend({
         height: 60
       },
       status: {
+        generation: 0,
         animate: false,
         fps: {
           update: 0,
@@ -110,6 +112,7 @@ export default Vue.extend({
     },
     animation(starTime: number) {
       this.run();
+      this.status.generation++;
       if (this.status.animate) {
         requestAnimationFrame(nextTime => {
           if (nextTime - this.status.fps.update > 100) {
@@ -130,6 +133,7 @@ export default Vue.extend({
       this.status.animate = false;
     },
     initSandBox() {
+      this.status.generation = 0;
       this.sandBox = Array.from(new Array(this.sandSize.width)).map(() =>
         Array.from(new Array(this.sandSize.height)).map(
           // () => 255 * Math.random()
