@@ -13,6 +13,7 @@
         :width="sandSize.width * 10 * (1 + sandSize.outter)"
         :height="sandSize.height * 10 * (1 + sandSize.outter)"
         class="my-canvas"
+        @click="set"
         >不支持canvas</canvas
       >
     </div>
@@ -71,9 +72,9 @@ export default Vue.extend({
       sandBox: [] as any[][],
       ctx: (undefined as any) as CanvasRenderingContext2D,
       sandSize: {
-        width: 60,
-        height: 60,
-        outter: 0.3
+        width: 50,
+        height: 50,
+        outter: 0.2
       },
       setting: {
         miniTime: 100
@@ -140,6 +141,56 @@ export default Vue.extend({
       this.canvasData = this.sandBox.map(elements =>
         elements.map(element => element)
       );
+    },
+    set(event: MouseEvent) {
+      console.log(event);
+      let rowOutter = (this.sandSize.width * 10 * this.sandSize.outter) / 2;
+      let colOutter = (this.sandSize.height * 10 * this.sandSize.outter) / 2;
+
+      let x: number, y: number;
+
+      let offsetLeft: number = 0;
+      let offsetTop: number = 0;
+
+      if (
+        event.srcElement &&
+        (event.srcElement as HTMLElement).offsetLeft &&
+        (event.srcElement as HTMLElement).offsetTop
+      ) {
+        offsetLeft = (event.srcElement as HTMLElement).offsetLeft;
+        offsetTop = (event.srcElement as HTMLElement).offsetTop;
+      }
+
+      x = event.clientX - offsetLeft;
+      y = event.clientY - offsetTop;
+
+      if (x < rowOutter) {
+        x = this.sandSize.width * 10 + x - rowOutter;
+      } else if (x < rowOutter + this.sandSize.width * 10) {
+        x = x - rowOutter;
+      } else {
+        x = x - rowOutter - this.sandSize.width * 10;
+      }
+
+      if (y < colOutter) {
+        y = this.sandSize.width * 10 + y - colOutter;
+      } else if (y < colOutter + this.sandSize.width * 10) {
+        y = y - colOutter;
+      } else {
+        y = y - colOutter - this.sandSize.width * 10;
+      }
+
+      // console.log(x);
+      // console.log(y);
+      const posX = Math.floor(x / 10);
+      const posY = Math.floor(y / 10);
+      // console.log(posX);
+      // console.log(posY);
+
+      this.canvasData[posX][posY] = !this.canvasData[posX][posY];
+      const temp = this.canvasData;
+      this.canvasData = [[]];
+      this.canvasData = temp;
     },
     animate() {
       this.status.animate = true;
@@ -233,7 +284,7 @@ export default Vue.extend({
       }
     },
     initCtx() {
-      console.log(this.$refs.myCanvas);
+      // console.log(this.$refs.myCanvas);
       const canvas: HTMLCanvasElement = this.$refs.myCanvas as any;
       const ctx = canvas.getContext("2d", { alpha: false });
       if (ctx) {
