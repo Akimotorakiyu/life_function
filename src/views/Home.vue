@@ -10,16 +10,28 @@
       <canvas
         ref="myCanvas"
         id="canvas"
-        width="800"
-        height="800"
+        :width="sandSize.width * 10 * (1 + sandSize.outter)"
+        :height="sandSize.height * 10 * (1 + sandSize.outter)"
         class="my-canvas"
         >不支持canvas</canvas
       >
     </div>
     <div>
-      <input type="range" v-model="setting.miniTime" min="0" max="4000" />min{{
-        setting.miniTime
-      }}ms
+      <input
+        type="range"
+        v-model.number="setting.miniTime"
+        min="0"
+        max="4000"
+      />min{{ setting.miniTime }}ms
+    </div>
+    <div>
+      <input
+        type="range"
+        v-model.number="sandSize.outter"
+        min="0"
+        max="1"
+        step="0.1"
+      />min{{ sandSize.outter }}outter
     </div>
     <div>
       代数{{ status.generation }} fps:{{ status.fps.value.toFixed(2) }}
@@ -46,7 +58,8 @@ export default Vue.extend({
       ctx: (undefined as any) as CanvasRenderingContext2D,
       sandSize: {
         width: 60,
-        height: 60
+        height: 60,
+        outter: 0.3
       },
       setting: {
         miniTime: 100
