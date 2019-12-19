@@ -52,7 +52,9 @@
       👪{{ status.generation }} fps:{{ status.fps.value.toFixed(2) }}
       {{ status.fps.tag ? "❤️" : "🥰" }}
     </div>
-    <button @click="initSandBox">🌀</button>
+
+    <button @click="initSandBox('chaos')">⚽</button>
+    <button @click="initSandBox('black')">🌀</button>
     <button @click="run">⏯️</button>
     <button @click="animate" :disabled="status.animate">▶️</button>
     <button @click="pause" :disabled="!status.animate">⏸️</button>
@@ -226,12 +228,24 @@ export default Vue.extend({
     stop() {
       this.status.animate = false;
     },
-    initSandBox() {
+    initSandBox(type: string) {
       this.status.generation = 0;
       this.sandBox = Array.from(new Array(this.sandSize.width)).map(() =>
         Array.from(new Array(this.sandSize.height)).map(
           // () => 255 * Math.random()
-          () => Math.round(Math.random())
+          // () => Math.round(Math.random())
+          () => {
+            switch (type) {
+              case "black":
+                return 0;
+
+              case "chaos":
+                return Math.round(Math.random());
+
+              default:
+                return 0;
+            }
+          }
         )
       );
       this.canvasData = this.sandBox.map(elements =>
@@ -290,6 +304,7 @@ export default Vue.extend({
       if (ctx) {
         this.ctx = ctx;
       }
+      this.initSandBox("chaos");
     }
   },
   mounted() {
