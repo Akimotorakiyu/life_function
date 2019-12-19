@@ -17,6 +17,11 @@
       >
     </div>
     <div>
+      <input type="range" v-model="setting.miniTime" min="0" max="4000" />min{{
+        setting.miniTime
+      }}ms
+    </div>
+    <div>
       代数{{ status.generation }} fps:{{ status.fps.value.toFixed(2) }}
       {{ status.fps.tag ? "❤️" : "🥰" }}
     </div>
@@ -42,6 +47,9 @@ export default Vue.extend({
       sandSize: {
         width: 60,
         height: 60
+      },
+      setting: {
+        miniTime: 100
       },
       status: {
         generation: 0,
@@ -114,17 +122,25 @@ export default Vue.extend({
       this.run();
       this.status.generation++;
       if (this.status.animate) {
-        requestAnimationFrame(nextTime => {
+        // requestAnimationFrame(nextTime => {
+        //   if (nextTime - this.status.fps.update > 100) {
+        //     this.status.fps.update = nextTime;
+        //     this.status.fps.tag = !this.status.fps.tag;
+        //     this.status.fps.value = 1000 / (nextTime - starTime);
+        //   }
+        //   this.animation(nextTime);
+        // });
+
+        setTimeout(() => {
+          const nextTime = Date.now();
           if (nextTime - this.status.fps.update > 100) {
             this.status.fps.update = nextTime;
             this.status.fps.tag = !this.status.fps.tag;
             this.status.fps.value = 1000 / (nextTime - starTime);
           }
-
           this.animation(nextTime);
-        });
+        }, this.setting.miniTime);
       }
-      // this.status.animate = false;
     },
     pause() {
       this.status.animate = false;
