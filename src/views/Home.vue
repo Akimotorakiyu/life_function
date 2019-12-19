@@ -199,16 +199,18 @@ export default Vue.extend({
           offset.forEach(offsetY => {
             ctx.drawImage(
               offscreenCanvas,
-              100 + offsetX * this.sandSize.width * 10,
-              100 + offsetY * this.sandSize.height * 10
+              (this.sandSize.width * 10 * this.sandSize.outter) / 2 +
+                offsetX * this.sandSize.width * 10,
+              (this.sandSize.height * 10 * this.sandSize.outter) / 2 +
+                +offsetY * this.sandSize.height * 10
             );
           });
         });
 
         ctx.strokeStyle = `rgb(0,255,0)`;
         ctx.strokeRect(
-          100,
-          100,
+          (this.sandSize.width * 10 * this.sandSize.outter) / 2,
+          (this.sandSize.height * 10 * this.sandSize.outter) / 2,
           this.sandSize.width * 10,
           this.sandSize.height * 10
         );
