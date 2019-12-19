@@ -22,25 +22,39 @@
         v-model.number="setting.miniTime"
         min="0"
         max="4000"
-      />min{{ setting.miniTime }}ms
+      />{{ setting.miniTime }}ms
     </div>
     <div>
+      <input
+        type="range"
+        v-model.number="sandSize.width"
+        min="10"
+        max="200"
+        step="2"
+      />{{ sandSize.width }}width
+      <input
+        type="range"
+        v-model.number="sandSize.height"
+        min="10"
+        max="100"
+        step="2"
+      />{{ sandSize.height }}height
       <input
         type="range"
         v-model.number="sandSize.outter"
         min="0"
         max="1"
         step="0.1"
-      />min{{ sandSize.outter }}outter
+      />{{ sandSize.outter }}outter
     </div>
     <div>
-      代数{{ status.generation }} fps:{{ status.fps.value.toFixed(2) }}
+      👪{{ status.generation }} fps:{{ status.fps.value.toFixed(2) }}
       {{ status.fps.tag ? "❤️" : "🥰" }}
     </div>
-    <button @click="initSandBox">重置sandBox</button>
-    <button @click="run">运行</button>
-    <button @click="animate">动画</button>
-    <button @click="pause">暂停动画</button>
+    <button @click="initSandBox">🌀</button>
+    <button @click="run">⏯️</button>
+    <button @click="animate" :disabled="status.animate">▶️</button>
+    <button @click="pause" :disabled="!status.animate">⏸️</button>
   </div>
 </template>
 
