@@ -157,9 +157,14 @@ export default Vue.extend({
         });
       });
 
-      this.canvasData = this.sandBox.map(elements =>
-        elements.map(element => element)
-      );
+      // this.canvasData = this.sandBox.map(elements =>
+      //   elements.map(element => element)
+      // );
+
+      const temp = this.canvasData;
+      this.canvasData = [[]];
+      this.canvasData = this.sandBox;
+      this.sandBox = temp;
     },
     set(event: MouseEvent) {
       console.log(event);
