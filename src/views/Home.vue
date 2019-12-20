@@ -54,8 +54,8 @@
     </div>
     <div>
       👪{{ status.generation }} ❤️{{ status.fps.value.toFixed(2) }}
-      <button @click="initSandBox('chaos')">⚽</button>
-      <button @click="initSandBox('black')">🌀</button>
+      <button @click="initSandBox('chaos')">🌀⚽</button>
+      <button @click="initSandBox('black')">🌀⚫</button>
       <button @click="run">⏯️</button>
       <button @click="animate" :disabled="status.animate">▶️</button>
       <button @click="pause" :disabled="!status.animate">⏸️</button>
