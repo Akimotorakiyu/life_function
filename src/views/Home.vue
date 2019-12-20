@@ -24,8 +24,6 @@
         min="0"
         max="4000"
       />{{ setting.miniTime }}ms
-    </div>
-    <div>
       <input
         type="range"
         v-model.number="sandSize.width"
@@ -47,17 +45,16 @@
         max="1"
         step="0.1"
       />{{ sandSize.outter }}outter
+      <input type="checkbox" v-model="setting.mutation" />mutation
     </div>
     <div>
-      👪{{ status.generation }} fps:{{ status.fps.value.toFixed(2) }}
-      {{ status.fps.tag ? "❤️" : "🥰" }}
+      👪{{ status.generation }} ❤️{{ status.fps.value.toFixed(2) }}
+      <button @click="initSandBox('chaos')">⚽</button>
+      <button @click="initSandBox('black')">🌀</button>
+      <button @click="run">⏯️</button>
+      <button @click="animate" :disabled="status.animate">▶️</button>
+      <button @click="pause" :disabled="!status.animate">⏸️</button>
     </div>
-
-    <button @click="initSandBox('chaos')">⚽</button>
-    <button @click="initSandBox('black')">🌀</button>
-    <button @click="run">⏯️</button>
-    <button @click="animate" :disabled="status.animate">▶️</button>
-    <button @click="pause" :disabled="!status.animate">⏸️</button>
   </div>
 </template>
 
@@ -69,9 +66,9 @@ export default Vue.extend({
   data() {
     return {
       // canvas 绘制数据
-      canvasData: [] as any[][],
+      canvasData: [[0]] as any[][],
       // sandBox 沙盒数据
-      sandBox: [] as any[][],
+      sandBox: [[0]] as any[][],
       ctx: (undefined as any) as CanvasRenderingContext2D,
       offscreenCanvas: (undefined as any) as HTMLCanvasElement,
       offCtx: (undefined as any) as CanvasRenderingContext2D,
@@ -81,7 +78,8 @@ export default Vue.extend({
         outter: 0.2
       },
       setting: {
-        miniTime: 100
+        miniTime: 100,
+        mutation: true
       },
       status: {
         generation: 0,
@@ -104,6 +102,15 @@ export default Vue.extend({
   },
   methods: {
     run() {
+      if (this.setting.mutation) {
+        let posX: number = Math.floor(this.canvasData.length * Math.random());
+        let posY: number = Math.floor(
+          this.canvasData[0].length * Math.random()
+        );
+
+        this.canvasData[posX][posY] = 1;
+      }
+
       this.canvasData.forEach((elements, x) => {
         elements.forEach((element, y) => {
           const offset = [-1, 0, 1];
