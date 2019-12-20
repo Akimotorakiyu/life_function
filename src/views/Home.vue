@@ -22,8 +22,8 @@
         type="range"
         v-model.number="setting.miniTime"
         min="0"
-        max="4000"
-      />{{ setting.miniTime }}ms
+        max="88"
+      />{{ Math.floor(Math.pow(1.1, setting.miniTime) - 1) }}ms
       <input
         type="range"
         v-model.number="sandSize.width"
@@ -78,7 +78,7 @@ export default Vue.extend({
         outter: 0.2
       },
       setting: {
-        miniTime: 100,
+        miniTime: 30,
         mutation: true
       },
       status: {
@@ -228,7 +228,7 @@ export default Vue.extend({
             this.status.fps.value = 1000 / (nextTime - starTime);
           }
           this.animation(nextTime);
-        }, this.setting.miniTime);
+        }, Math.floor(Math.pow(1.1, this.setting.miniTime) - 1));
       }
     },
     pause() {
