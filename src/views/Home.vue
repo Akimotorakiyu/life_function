@@ -73,6 +73,8 @@ export default Vue.extend({
       // sandBox 沙盒数据
       sandBox: [] as any[][],
       ctx: (undefined as any) as CanvasRenderingContext2D,
+      offscreenCanvas: (undefined as any) as HTMLCanvasElement,
+      offCtx: (undefined as any) as CanvasRenderingContext2D,
       sandSize: {
         width: 50,
         height: 50,
@@ -125,7 +127,7 @@ export default Vue.extend({
                   posY = posY - elements.length;
                 }
 
-                return counterInner + this.canvasData[posX][posY];
+                return counterInner + (this.canvasData[posX][posY] ? 1 : 0);
               }
             }, 0);
             return counterOutter + counterInner;
@@ -254,9 +256,8 @@ export default Vue.extend({
     },
     drawCall() {
       // console.log("draw call");
-      if (this.ctx) {
-        let ctx = this.ctx;
-        const offscreenCanvas = document.createElement("canvas");
+      if (this.ctx && this.offscreenCanvas) {
+        const { ctx, offscreenCanvas } = this;
 
         offscreenCanvas.width = this.sandSize.width * 10;
         offscreenCanvas.height = this.sandSize.height * 10;
@@ -301,8 +302,14 @@ export default Vue.extend({
       // console.log(this.$refs.myCanvas);
       const canvas: HTMLCanvasElement = this.$refs.myCanvas as any;
       const ctx = canvas.getContext("2d", { alpha: false });
-      if (ctx) {
+      this.offscreenCanvas = document.createElement("canvas");
+      const offCtx = this.offscreenCanvas.getContext("2d");
+
+      if (ctx && offCtx) {
         this.ctx = ctx;
+        this.offCtx = offCtx;
+      } else {
+        console.warn("load ctx error");
       }
       this.initSandBox("chaos");
     }
