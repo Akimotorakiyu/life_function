@@ -2,10 +2,15 @@
 .my-canvas {
   border: solid rgba(3, 3, 3, 0.1) 1px;
 }
+
+.home {
+  text-align: center;
+}
 </style>
 
 <template>
   <div class="home">
+    <h2>play with firefox or chrome browser !</h2>
     <div>
       <canvas
         ref="myCanvas"
@@ -55,6 +60,9 @@
       <button @click="animate" :disabled="status.animate">▶️</button>
       <button @click="pause" :disabled="!status.animate">⏸️</button>
     </div>
+    <a href="https://github.com/Akimotorakiyu/life_function"
+      >🤟check source code or make issue</a
+    >
   </div>
 </template>
 
