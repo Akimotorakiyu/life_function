@@ -280,6 +280,7 @@ export default Vue.extend({
         const offCtx = offscreenCanvas.getContext("2d");
 
         if (offCtx) {
+          offCtx.fillRect(0, 0, offscreenCanvas.width, offscreenCanvas.height);
           const offScreenCanvans = this.canvasData.forEach((elements, x) => {
             elements.forEach((element, y) => {
               offCtx.fillStyle = `rgb(${element * 255},${element *
